@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sabum@portfolio:~$ — 변사범 포트폴리오</title>
+    <meta name="description" content="변사범 — 크리에이티브 디렉터, Plus X 공동대표, 브랜드 &amp; UX/UI 디자이너 포트폴리오">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════
+           RESET & BASE
+           ═══════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0000EE;
+            --bg-dark: #0000AA;
+            --text: #FFFFFF;
+            --text-dim: #AAAAFF;
+            --accent: #FFFF00;
+            --accent2: #00FF00;
+            --prompt: #00FF00;
+            --error: #FF5555;
+            --border: #4444FF;
+            --selection-bg: #FFFFFF;
+            --selection-text: #0000EE;
+            --font: 'SF Mono', 'Menlo', 'Monaco', 'Cascadia Code', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+        }
+
+        /* 블랙 테마 */
+        [data-theme='black'] {
+            --bg: #111111;
+            --bg-dark: #0a0a0a;
+            --text: #E0E0E0;
+            --text-dim: #888888;
+            --accent: #00FF88;
+            --accent2: #FF6B00;
+            --prompt: #00FF88;
+            --error: #FF4444;
+            --border: #333333;
+            --selection-bg: #00FF88;
+            --selection-text: #111111;
+        }
+
+        /* 프리즘 테마 */
+        [data-theme='prism'] {
+            --bg: #1a0a2e;
+            --bg-dark: #0d0520;
+            --text: #f0e6ff;
+            --text-dim: #9980cc;
+            --accent: #ff6bff;
+            --accent2: #00ffcc;
+            --prompt: #00ffcc;
+            --error: #ff4466;
+            --border: #4422aa;
+            --selection-bg: #ff6bff;
+            --selection-text: #1a0a2e;
+        }
+
+        [data-theme='prism'] body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg,
+                    #1a0a2e 0%,
+                    #2d1b69 20%,
+                    #0d3b66 40%,
+                    #1a0a2e 60%,
+                    #4a1942 80%,
+                    #1a0a2e 100%);
+            background-size: 400% 400%;
+            animation: prismShift 8s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes prismShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* 테마 전환 버튼 */
+        .theme-switcher {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 999;
+            display: flex;
+            gap: 6px;
+            padding: 6px 8px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            backdrop-filter: blur(8px);
+        }
+
+        .theme-btn {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.15);
+        }
+
+        .theme-btn.active {
+            border-color: #FFFFFF;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+
+        .theme-btn[data-theme='blue'] {
+            background: #0000EE;
+        }
+
+        .theme-btn[data-theme='black'] {
+            background: #222222;
+        }
+
+        .theme-btn[data-theme='prism'] {
+            background: linear-gradient(135deg, #ff6bff, #00ffcc, #4422aa);
+        }
+
+        /* 언어 전환 버튼 */
+        .lang-divider {
+            width: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 4px;
+        }
+
+        .lang-btn {
+            padding: 4px 8px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Press Start 2P', var(--font);
+            font-size: 7px;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 1px;
+        }
+
+        .lang-btn:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .lang-btn.active {
+            border-color: #FFFFFF;
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* CRT 글리치 루프 */
+        .crt-glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 998;
+            opacity: 0;
+        }
+
+        .crt-glitch-overlay.active {
+            animation: crtGlitchLoop 0.15s steps(2) forwards;
+        }
+
+        @keyframes crtGlitchLoop {
+            0% {
+                opacity: 1;
+                background: repeating-linear-gradient(0deg,
+                        transparent,
+                        transparent 2px,
+                        rgba(255, 255, 255, 0.03) 2px,
+                        rgba(255, 255, 255, 0.03) 4px);
+                clip-path: inset(40% 0 30% 0);
+            }
+
+            20% {
+                clip-path: inset(10% 0 60% 0);
+                background: repeating-linear-gradient(0deg,
+                        transparent,
+                        transparent 1px,
+                        rgba(0, 255, 255, 0.05) 1px,
+                        rgba(0, 255, 255, 0.05) 3px);
+            }
+
+            40% {
+                clip-path: inset(70% 0 5% 0);
+                transform: translate(-3px, 0);
+            }
+
+            60% {
+                clip-path: inset(20% 0 50% 0);
+                transform: translate(2px, 0);
+                background: repeating-linear-gradient(0deg,
+                        transparent,
+                        transparent 2px,
+                        rgba(255, 0, 0, 0.04) 2px,
+                        rgba(255, 0, 0, 0.04) 4px);
+            }
+
+            80% {
+                clip-path: inset(50% 0 20% 0);
+                transform: translate(-1px, 0);
+            }
+
+            100% {
+                opacity: 0;
+                clip-path: inset(0 0 0 0);
+                transform: translate(0);
+            }
+        }
+
+        .crt-glitch-text {
+            display: none;
+        }
+
+        .crt-glitch-overlay.active .crt-glitch-text {
+            display: block;
+            position: absolute;
+            font-family: var(--font);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.15);
+            white-space: nowrap;
+        }
+
+        ::selection {
+            background: var(--selection-bg);
+            color: var(--selection-text);
+        }
+
+        html {
+            font-size: 14px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ═══════════════════════════════════════════
+           스캔라인 오버레이 (CRT 효과)
+           ═══════════════════════════════════════════ */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.03) 2px,
+                    rgba(0, 0, 0, 0.03) 4px);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ═══════════════════════════════════════════
+           터미널 윈도우
+           ═══════════════════════════════════════════ */
+        .terminal-window {
+            max-width: 960px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        /* 타이틀 바 */
+        .terminal-titlebar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            background: var(--bg-dark);
+            border-bottom: 2px solid var(--border);
+            gap: 12px;
+        }
+
+        .titlebar-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .titlebar-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .titlebar-btn.close {
+            background: #FF5F56;
+        }
+
+        .titlebar-btn.minimize {
+            background: #FFBD2E;
+        }
+
+        .titlebar-btn.maximize {
+            background: #27C93F;
+        }
+
+        .titlebar-path {
+            flex: 1;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ═══════════════════════════════════════════
+           네비게이션
+           ═══════════════════════════════════════════ */
+        .terminal-nav {
+            padding: 12px 24px;
+            background: rgba(0, 0, 68, 0.6);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 16px;
+        }
+
+        .nav-cmd {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-cmd:hover {
+            color: var(--accent);
+        }
+
+        .nav-cmd::before {
+            content: '> ';
+            color: var(--prompt);
+        }
+
+        /* ═══════════════════════════════════════════
+           공통 섹션 스타일
+           ═══════════════════════════════════════════ */
+        .terminal-body {
+            padding: 24px;
+        }
+
+        .section {
+            margin-bottom: 48px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ─── 글리치 진입 효과 ─── */
+        .section.glitch-in {
+            animation: glitchReveal 0.6s steps(1) forwards;
+        }
+
+        .section.glitch-in>* {
+            animation: glitchText 0.4s steps(2) 0.1s both;
+        }
+
+        .section.glitch-in>*:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .section.glitch-in>*:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .section.glitch-in>*:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        @keyframes glitchReveal {
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            10% {
+                clip-path: inset(0 60% 0 0);
+            }
+
+            15% {
+                clip-path: inset(30% 60% 50% 0);
+            }
+
+            20% {
+                clip-path: inset(0 40% 0 0);
+            }
+
+            25% {
+                clip-path: inset(60% 40% 0 0);
+            }
+
+            30% {
+                clip-path: inset(0 20% 0 0);
+            }
+
+            40% {
+                clip-path: inset(0 10% 0 0);
+            }
+
+            50% {
+                clip-path: inset(20% 0 60% 0);
+            }
+
+            60% {
+                clip-path: inset(0);
+            }
+
+            70% {
+                clip-path: inset(40% 0 20% 0);
+            }
+
+            75% {
+                clip-path: inset(0);
+            }
+
+            100% {
+                clip-path: inset(0);
+            }
+        }
+
+        @keyframes glitchText {
+            0% {
+                transform: translate(0);
+                text-shadow: none;
+            }
+
+            10% {
+                transform: translate(-3px, 1px);
+                text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+            }
+
+            20% {
+                transform: translate(2px, -1px);
+                text-shadow: -2px 0 #ff0000, 2px 0 #00ffff;
+            }
+
+            30% {
+                transform: translate(0, 2px);
+                text-shadow: 1px 0 #ff0000, -1px 0 #00ffff;
+            }
+
+            40% {
+                transform: translate(-1px, 0);
+                text-shadow: none;
+            }
+
+            50% {
+                transform: translate(3px, 1px);
+                text-shadow: -3px 0 #ff0000, 3px 0 #00ffff;
+            }
+
+            60% {
+                transform: translate(0);
+                text-shadow: 1px 0 #ff0000, -1px 0 #00ffff;
+            }
+
+            70% {
+                transform: translate(-2px, -1px);
+                text-shadow: none;
+            }
+
+            80% {
+                transform: translate(1px, 0);
+                text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+            }
+
+            90% {
+                transform: translate(0);
+                text-shadow: none;
+            }
+
+            100% {
+                transform: translate(0);
+                text-shadow: none;
+            }
+        }
+
+        .prompt-line {
+            margin-bottom: 16px;
+        }
+
+        .prompt {
+            color: var(--prompt);
+            font-weight: bold;
+        }
+
+        .command {
+            color: var(--accent);
+        }
+
+        .comment {
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .output-block {
+            padding-left: 8px;
+            border-left: 2px solid var(--border);
+            margin-left: 4px;
+        }
+
+        .separator {
+            color: var(--border);
+            margin: 32px 0;
+            letter-spacing: 2px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .label {
+            color: var(--accent2);
+            font-weight: bold;
+        }
+
+        .dim {
+            color: var(--text-dim);
+        }
+
+        .highlight {
+            color: var(--accent);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent);
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        a:hover {
+            color: var(--accent2);
+            border-color: var(--accent2);
+        }
+
+        /* ═══════════════════════════════════════════
+           픽셀 도형 아이콘
+           ═══════════════════════════════════════════ */
+        .pixel-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            margin-right: 8px;
+            font-family: var(--font);
+            image-rendering: pixelated;
+        }
+
+        /* 유저 아이콘 — 다이아몬드 + 이니셜 */
+        .pixel-user {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--accent);
+            transform: rotate(45deg);
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .pixel-user::after {
+            content: 'S';
+            transform: rotate(-45deg);
+            color: var(--accent);
+            font-size: 16px;
+            font-weight: bold;
+            font-family: var(--font);
+        }
+
+        /* 트로피 아이콘 — 별 모양 텍스트 */
+        .pixel-trophy {
+            display: inline-block;
+            color: var(--accent);
+            font-size: 16px;
+            margin-right: 6px;
+            letter-spacing: -1px;
+        }
+
+        .pixel-trophy::after {
+            content: '★';
+        }
+
+        /* 폴더 아이콘 — 사각 브래킷 */
+        .pixel-folder {
+            display: inline-block;
+            color: var(--accent);
+            font-size: 14px;
+            margin-right: 6px;
+        }
+
+        .pixel-folder::after {
+            content: '[▪]';
+        }
+
+        /* 마이크 아이콘 — 화살표 */
+        .pixel-mic {
+            display: inline-block;
+            color: var(--accent2);
+            font-size: 14px;
+            margin-right: 6px;
+        }
+
+        .pixel-mic::after {
+            content: '▶';
+        }
+
+        /* ═══════════════════════════════════════════
+           ASCII 아트 헤더
+           ═══════════════════════════════════════════ */
+        .ascii-art {
+            color: var(--accent);
+            font-size: 10px;
+            line-height: 1.2;
+            white-space: pre;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        /* ═══════════════════════════════════════════
+           인트로 타이핑 효과
+           ═══════════════════════════════════════════ */
+        .typing-line {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 0;
+            animation: typing 1.5s steps(40) forwards;
+        }
+
+        .typing-line:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .typing-line:nth-child(3) {
+            animation-delay: 1.0s;
+        }
+
+        .typing-line:nth-child(4) {
+            animation-delay: 1.5s;
+        }
+
+        @keyframes typing {
+            to {
+                width: 100%;
+            }
+        }
+
+        /* 커서 깜박임 */
+        .cursor-blink {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--text);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* ═══════════════════════════════════════════
+           경력 타임라인
+           ═══════════════════════════════════════════ */
+        .career-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 8px;
+            align-items: baseline;
+        }
+
+        .career-year {
+            color: var(--accent);
+            min-width: 130px;
+            flex-shrink: 0;
+        }
+
+        .career-role {
+            color: var(--text);
+        }
+
+        /* ═══════════════════════════════════════════
+           수상실적 목록
+           ═══════════════════════════════════════════ */
+        .award-year-group {
+            margin-bottom: 16px;
+        }
+
+        .award-year-header {
+            color: var(--accent2);
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        .award-item {
+            padding-left: 20px;
+            color: var(--text-dim);
+            position: relative;
+        }
+
+        .award-item::before {
+            content: '├─';
+            position: absolute;
+            left: 0;
+            color: var(--border);
+        }
+
+        .award-item:last-child::before {
+            content: '└─';
+        }
+
+        .award-name {
+            color: var(--text);
+        }
+
+        /* ═══════════════════════════════════════════
+           프로젝트 리스트 (tree 스타일)
+           ═══════════════════════════════════════════ */
+        .project-year-group {
+            margin-bottom: 20px;
+        }
+
+        .project-year-header {
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .project-year-header::before {
+            content: '📂 ';
+            font-style: normal;
+        }
+
+        .project-item {
+            padding-left: 24px;
+            color: var(--text-dim);
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .project-item::before {
+            content: '│  ';
+            position: absolute;
+            left: 4px;
+            color: var(--border);
+        }
+
+        .project-item:last-child::before {
+            content: '└─ ';
+        }
+
+        /* ═══════════════════════════════════════════
+           레트로 게임 씬
+           ═══════════════════════════════════════════ */
+        .game-scene {
+            position: relative;
+            width: 100%;
+            margin: 0 0 8px 0;
+            border: 2px solid var(--border);
+            background: #000088;
+            overflow: hidden;
+        }
+
+        .game-canvas {
+            display: block;
+            width: 100%;
+            height: 200px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* ═══════════════════════════════════════════
+           픽셀 폰트 통계
+           ═══════════════════════════════════════════ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .stat-box {
+            border: 1px solid var(--border);
+            padding: 16px 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1.6rem;
+            color: var(--accent);
+            font-weight: bold;
+            line-height: 1;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        /* ═══════════════════════════════════════════
+           픽셀아트 포트폴리오 갤러리
+           ═══════════════════════════════════════════ */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            border: 2px solid var(--border);
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1;
+            background: #000044;
+        }
+
+        .gallery-item canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        .gallery-item .gallery-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 6px 8px;
+            background: rgba(0, 0, 0, 0.7);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--accent);
+            text-align: center;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-label {
+            transform: translateY(0);
+        }
+
+        .gallery-item .pixel-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 3px solid transparent;
+            transition: border-color 0.3s ease;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .gallery-item:hover .pixel-frame {
+            border-color: var(--accent);
+            box-shadow: inset 0 0 20px rgba(255, 255, 0, 0.15);
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .gallery-item .gallery-label {
+                font-size: 6px;
+            }
+        }
+
+        /* ═══════════════════════════════════════════
+           강의 탭
+           ═══════════════════════════════════════════ */
+        .lecture-category {
+            margin-bottom: 16px;
+        }
+
+        .lecture-category-title {
+            color: var(--accent2);
+            margin-bottom: 6px;
+        }
+
+        .lecture-list {
+            padding-left: 16px;
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        /* ═══════════════════════════════════════════
+           푸터
+           ═══════════════════════════════════════════ */
+        .terminal-footer {
+            padding: 32px 24px 48px;
+            border-top: 2px solid var(--border);
+            margin-top: 48px;
+        }
+
+        .footer-ascii {
+            color: var(--text-dim);
+            font-size: 10px;
+            line-height: 1.2;
+            white-space: pre;
+            margin-bottom: 16px;
+        }
+
+        /* ═══════════════════════════════════════════
+           스크롤바
+           ═══════════════════════════════════════════ */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-dim);
+        }
+
+        /* ═══════════════════════════════════════════
+           프로그레스 바 (상단)
+           ═══════════════════════════════════════════ */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent2);
+            z-index: 200;
+            transition: width 0.1s linear;
+        }
+
+        /* ═══════════════════════════════════════════
+           모바일 반응형
+           ═══════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            html {
+                font-size: 12px;
+            }
+
+            .terminal-body {
+                padding: 16px 12px;
+            }
+
+            .terminal-titlebar {
+                padding: 8px 12px;
+            }
+
+            .titlebar-path {
+                font-size: 10px;
+            }
+
+            .terminal-nav {
+                padding: 8px 12px;
+                gap: 2px 10px;
+            }
+
+            .nav-cmd {
+                font-size: 11px;
+            }
+
+            .career-item {
+                flex-direction: column;
+                gap: 2px;
+                margin-bottom: 12px;
+            }
+
+            .career-year {
+                min-width: auto;
+            }
+
+            .ascii-art {
+                font-size: 6px;
+            }
+
+            .game-canvas {
+                height: 150px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .stat-value {
+                font-size: 1.2rem;
+            }
+
+            .project-item,
+            .award-item {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-canvas {
+                height: 120px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-value {
+                font-size: 1rem;
+            }
+
+            .ascii-art {
+                font-size: 5px;
+            }
+        }
+
+        /* ═══════════════════════════════════════════
+           로딩 화면
+           ═══════════════════════════════════════════ */
+        .boot-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.5s ease;
+        }
+
+        .boot-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .boot-text {
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 14px;
+            line-height: 1.8;
+            max-width: 600px;
+            padding: 24px;
+        }
+
+        .boot-line {
+            opacity: 0;
+            animation: bootFade 0.3s forwards;
+        }
+
+        .boot-line:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .boot-line:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .boot-line:nth-child(3) {
+            animation-delay: 0.5s;
+        }
+
+        .boot-line:nth-child(4) {
+            animation-delay: 0.7s;
+        }
+
+        .boot-line:nth-child(5) {
+            animation-delay: 0.9s;
+        }
+
+        .boot-line:nth-child(6) {
+            animation-delay: 1.1s;
+        }
+
+        .boot-line:nth-child(7) {
+            animation-delay: 1.3s;
+        }
+
+        @keyframes bootFade {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 로딩 프로그레스 */
+        .boot-progress {
+            width: 300px;
+            height: 4px;
+            background: var(--border);
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .boot-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent2);
+            animation: bootLoad 1.8s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes bootLoad {
+            to {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 테마 전환 + 언어 버튼 -->
+    <div class="theme-switcher">
+        <button class="theme-btn active" data-theme="blue" title="Blue"></button>
+        <button class="theme-btn" data-theme="black" title="Black"></button>
+        <button class="theme-btn" data-theme="prism" title="Prism"></button>
+        <div class="lang-divider"></div>
+        <button class="lang-btn active" data-lang="ko">KO</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+
+    <!-- CRT 글리치 오버레이 -->
+    <div class="crt-glitch-overlay" id="crtGlitch"></div>
+
+    <!-- 스크롤 프로그레스 바 -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- ═══════════════════════════════════════════
+         부팅 화면
+         ═══════════════════════════════════════════ -->
+    <div class="boot-screen" id="bootScreen">
+        <div class="boot-text">
+            <div class="boot-line">SABUM PORTFOLIO OS v2.0</div>
+            <div class="boot-line">Copyright (c) 2003-2025 Sabum Byun</div>
+            <div class="boot-line">&nbsp;</div>
+            <div class="boot-line"><span class="label">[OK]</span> 시스템 초기화 중...</div>
+            <div class="boot-line"><span class="label">[OK]</span> 프로필 데이터 로드...</div>
+            <div class="boot-line"><span class="label">[OK]</span> 포트폴리오 렌더링...</div>
+            <div class="boot-line"><span class="highlight">✓ 준비 완료</span></div>
+        </div>
+        <div class="boot-progress">
+            <div class="boot-progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         터미널 윈도우
+         ═══════════════════════════════════════════ -->
+    <div class="terminal-window">
+
+        <!-- 타이틀 바 -->
+        <div class="terminal-titlebar">
+            <div class="titlebar-buttons">
+                <span class="titlebar-btn close"></span>
+                <span class="titlebar-btn minimize"></span>
+                <span class="titlebar-btn maximize"></span>
+            </div>
+            <div class="titlebar-path">sabum@portfolio:~/byun-sabum — zsh — 120×40</div>
+        </div>
+
+        <!-- 네비게이션 -->
+        <nav class="terminal-nav" id="terminalNav">
+            <a href="#profile" class="nav-cmd">whoami</a>
+            <a href="#career" class="nav-cmd">cat career.log</a>
+            <a href="#awards" class="nav-cmd">ls awards/</a>
+            <a href="#projects" class="nav-cmd">tree projects/</a>
+            <a href="#lectures" class="nav-cmd">history lectures</a>
+            <a href="#contact" class="nav-cmd">cat contact.txt</a>
+        </nav>
+
+        <!-- 터미널 바디 -->
+        <div class="terminal-body">
+
+            <!-- ═══════════════════════════════════
+                 ASCII 아트 인트로
+                 ═══════════════════════════════════ -->
+            <section class="section visible" id="intro">
+                <pre class="ascii-art">
+ ██████╗  █████╗ ██████╗ ██╗   ██╗███╗   ███╗
+ ██╔════╝██╔══██╗██╔══██╗██║   ██║████╗ ████║
+ ███████╗███████║██████╔╝██║   ██║██╔████╔██║
+ ╚════██║██╔══██║██╔══██╗██║   ██║██║╚██╔╝██║
+ ██████╔╝██║  ██║██████╔╝╚██████╔╝██║ ╚═╝ ██║
+ ╚═════╝ ╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝     ╚═╝
+                </pre>
+                <div class="comment"><!-- Creative Director / Brand Designer / UX Specialist --></div>
+                <div class="separator">════════════════════════════════════════════════════════════════</div>
+            </section>
+
+            <!-- ═══════════════════════════════════
+                 PROFILE — whoami
+                 ═══════════════════════════════════ -->
+            <section class="section" id="profile">
+                <div class="prompt-line">
+                    <span class="prompt">sabum@portfolio:~$</span> <span class="command">whoami</span>
+                </div>
+                <div class="output-block">
+                    <!-- 레트로 게임 씨 (이름 위) -->
+                    <div class="game-scene" id="gameScene">
+                        <canvas class="game-canvas" id="gameCanvas"></canvas>
+                    </div>
+
+                    <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:16px;margin-top:16px;">
+                        <div class="pixel-user" aria-hidden="true"></div>
+                        <div>
+                            <div style="font-size:1.4rem;font-weight:bold;">변사범 <span class="dim">/ Sabum Byun</span>
+                            </div>
+                            <div class="dim" style="margin-top:4px;">Creative Director · Brand Designer · UX/UI
+                                Specialist</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:12px;">
+                        <div><span class="label">PHONE</span> <span class="dim">010-3448-8594</span></div>
+                        <div><span class="label">EMAIL</span> <a href="mailto:sabum@plus-ex.com">sabum@plus-ex.com</a>
+                        </div>
+                        <div><span class="label">WEB </span> <a href="http://www.plus-ex.com" target="_blank"
+                                rel="noopener">www.plus-ex.com</a></div>
+                        <div><span class="label">BLOG </span> <a href="http://blog.naver.com/sabum007" target="_blank"
+                                rel="noopener">blog.naver.com/sabum007</a></div>
+                    </div>
+                </div>
+
+                <!-- 픽셀 폰트 통계 -->
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-box">
+                        <div class="stat-value" data-target="22">0</div>
+                        <div class="stat-label">경력 (년)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" data-target="38">0</div>
+                        <div class="stat-label">수상 실적</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" data-target="100">0</div>
+                        <div class="stat-label">+ 프로젝트</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" data-target="110">0</div>
+                        <div class="stat-label">+ 강연 횟수</div>
+                    </div>
+                </div>
+
+                <div class="separator">────────────────────────────────────────────────────────────────</div>
+            </section>
+
+            <!-- ═══════════════════════════════════
+                 CAREER — cat career.log
+                 ═══════════════════════════════════ -->
+            <section class="section" id="career">
+                <div class="prompt-line">
+                    <span class="prompt">sabum@portfolio:~$</span> <span class="command">cat career.log</span>
+                </div>
+                <div class="output-block">
+                    <div class="comment"># 경력 사항 — 22년의 디자인 여정</div>
+                    <br>
+                    <div class="career-item">
+                        <span class="career-year">2023 ~ 현재 ▌</span>
+                        <span class="career-role">플러스엑스 고문 / <span class="highlight">스탠더스 CDO</span></span>
+                    </div>
+                    <div class="career-item">
+                        <span class="career-year">2020 ~ 2023 ▌</span>
+                        <span class="career-role"><span class="highlight">위더코어 공동대표</span></span>
+                    </div>
+                    <div class="career-item">
+                        <span class="career-year">2010 ~ 2020 ▌</span>
+                        <span class="career-role"><span class="highlight">Plus X 공동대표</span> / Creative Director</span>
+                    </div>
+                    <div class="career-item">
+                        <span class="career-year">2006 ~ 2010 ▌</span>
+                        <span class="career-role"><span class="highlight">NHN</span> 미디어디자인 팀장</span>
+                    </div>
+                    <div class="career-item">
+                        <span class="career-year">2005 ~ 2006 ▌</span>
+                        <span class="career-role">디자인피버 디자이너</span>
+                    </div>
+                    <div class="career-item">
+                        <span class="career-year">2003 ~ 2005 ▌</span>
+                        <span class="career-role">디자인뉴이 창업</span>
+                    </div>
+                    <div class="career-item">
+                        <span class="career-year">1999 ~ 2003 ▌</span>
+                        <span class="career-role dim">청강문화산업대학 멀티미디어디자인학과</span>
+                    </div>
+                </div>
+                <div class="separator">────────────────────────────────────────────────────────────────</div>
+            </section>
+
+            <!-- ═══════════════════════════════════
+                 AWARDS — ls awards/
+                 ═══════════════════════════════════ -->
+            <section class="section" id="awards">
+                <div class="prompt-line">
+                    <span class="prompt">sabum@portfolio:~$</span> <span class="command">ls -la awards/ | head
+                        -60</span>
+                </div>
+                <div class="output-block">
+                    <div class="comment"># 총 38개의 국내외 디자인 어워드 수상</div>
+                    <br>
+
+                    <div class="award-year-group">
+                        <div class="award-year-header">▸ 2021/</div>
+                        <div class="award-item"><span class="award-name">IDEA</span> — Krafton Brand eXperience Design
+                        </div>
+                        <div class="award-item"><span class="award-name">Awwward</span> — Neker Brand Website</div>
+                        <div class="award-item"><span class="award-name">Awwward</span> — Deeponde Brand Website</div>
+                    </div>
+
+                    <div class="award-year-group">
+                        <div class="award-year-header">▸ 2020/</div>
+                        <div class="award-item"><span class="award-name">Reddot</span> — PlusX Official Website</div>
+                        <div class="award-item"><span class="award-name">Awwward</span> — PlusX Official Website</div>
+                        <div class="award-item"><span class="award-name">CSS Design Award</span> — PlusX Official
+                            Website</div>
+                        <div class="award-item"><span class="award-name">IF award</span> — PlusX Internal Branding</div>
+                        <div class="award-item"><span class="award-name">GDA</span> — emart App UX/UI Design</div>
+                        <div class="award-item"><span class="award-name">GDA</span> — G9 App UX/UI Design</div>
+                    </div>
+
+                    <div class="award-year-group">
+                        <div class="award-year-header">▸ 2019/</div>
+                        <div class="award-item"><span class="award-name">& Award</span> — KAKAOPAGE Brand Website</div>
+                        <div class="award-item"><span class="award-name">IF award</span> — YG Select App Design</div>
+                        <div class="award-item"><span class="award-name">GDA</span> — SHINSEGAE App / S.I.VILLAGE /
+                            L.POINT</div>
+                    </div>
+
+                    <div class="award-year-group">
+                        <div class="award-year-header">▸ 2018/</div>
+                        <div class="award-item"><span class="award-name">& Award</span> — YG Select App UX/UI</div>
+                        <div class="award-item"><span class="award-name">Reddot</span> — L.POINT App</div>
+                        <div class="award-item"><span class="award-name">IF comm.</span> — L.POINT App</div>
+                    </div>
+
+                    <div class="award-year-group">
+                        <div class="award-year-header">▸ 2016~2017/</div>
+                        <div class="award-item"><span class="award-name">IF comm.</span> — YGTIMES App</div>
+                        <div class="award-item"><span class="award-name">Reddot</span> — SSG PAY App</div>
+                        <div class="award-item"><span class="award-name">IF comm.</span> — 29CM App</div>
+                    </div>
+
+                    <div class="award-year-group">
+                        <div class="award-year-header">▸ 2014~2015/</div>
+                        <div class="award-item"><span class="award-name">IDEA</span> — SKT B box / LAB.C Cable</div>
+                        <div class="award-item"><span class="award-name">IF comm.</span> — 2 winner</div>
+                        <div class="award-item"><span class="award-name">IF product</span> — 2 winner / SKT B box</div>
+                        <div class="award-item"><span class="award-name">& award 대상</span> — 29CM App / SSG PAY App
+                        </div>
+                    </div>
+
+                    <div class="award-year-group">
+                        <div class="award-year-header">▸ 2010~2013/</div>
+                        <div class="award-item"><span class="award-name">IF comm.</span> — Plus X Brand Identity</div>
+                        <div class="award-item"><span class="award-name">Brand New Award</span> — 3개 부분 수상</div>
+                        <div class="award-item"><span class="award-name">Reddot</span> — 기업디자인 본상</div>
+                        <div class="award-item"><span class="award-name">깐느 Silver Lion</span> — 네이버 한글캠페인</div>
+                        <div class="award-item"><span class="award-name">IF comm.</span> — NHN Media Wall / NAVER Story
+                        </div>
+                        <div class="award-item"><span class="award-name">App Award</span> — CGV / SK Baseball / British
+                            Council</div>
+                    </div>
+                </div>
+                <div class="separator">────────────────────────────────────────────────────────────────</div>
+            </section>
+
+            <!-- ═══════════════════════════════════
+                 PROJECTS — tree projects/
+                 ═══════════════════════════════════ -->
+            <section class="section" id="projects">
+                <div class="prompt-line">
+                    <span class="prompt">sabum@portfolio:~$</span> <span class="command">tree projects/
+                        --sort=year</span>
+                </div>
+                <div class="output-block">
+                    <div class="comment"># 디자인 실적 — 주요 프로젝트 아카이브</div>
+                    <br>
+
+                    <div class="project-year-group">
+                        <div class="project-year-header">2024~2025</div>
+                        <div class="project-item">로우로우 폴스미스 포스터 제작</div>
+                        <div class="project-item">MBC 다큐멘터리 교실이데아 인트로 아트웍</div>
+                        <div class="project-item">블러블러 AI 모델에이전트 브랜드 개발</div>
+                    </div>
+
+                    <div class="project-year-group">
+                        <div class="project-year-header">2023</div>
+                        <div class="project-item">패스트캠퍼스 AI 강의 런칭</div>
+                        <div class="project-item">동해소주 AI포스터 디자인 (AI)</div>
+                        <div class="project-item">LG생활건강 아우라 라벨 디자인 (AI)</div>
+                        <div class="project-item">LG생활건강 키비주얼 디자인 (AI)</div>
+                    </div>
+
+                    <div class="project-year-group">
+                        <div class="project-year-header">2020~2022</div>
+                        <div class="project-item">디폰데 / 키네프 / 포슐라 코스메틱 브랜드 전체 운영</div>
+                        <div class="project-item">삼성화재 디자인 컨설팅 및 개선</div>
+                        <div class="project-item">픽스낫띵 패션브랜드 런칭</div>
+                    </div>
+
+                    <div class="project-year-group">
+                        <div class="project-year-header">2018~2019</div>
+                        <div class="project-item">플러스엑스 웹사이트 리뉴얼</div>
+                        <div class="project-item">중국 메이디 HOOD PRODUCT 선행디자인</div>
+                        <div class="project-item">이마트 APP UI/UX</div>
+                        <div class="project-item">삼성전자 신규 제품개발 UI/UX</div>
+                        <div class="project-item">제주항공 UI/UX</div>
+                    </div>
+
+                    <div class="project-year-group">
+                        <div class="project-year-header">2015~2017</div>
+                        <div class="project-item">롯데 L.POINT UI/UX디자인</div>
+                        <div class="project-item">이베이 G9 UI/UX디자인</div>
+                        <div class="project-item">YG E-SHOP / YG TIMES UI/UX</div>
+                        <div class="project-item">신세계백화점 앱 UI/UX디자인</div>
+                        <div class="project-item">29CM 앱 UI/UX디자인 고도화</div>
+                    </div>
+
+                    <div class="project-year-group">
+                        <div class="project-year-header">2012~2014</div>
+                        <div class="project-item">신세계 SSG PAY 브랜드·서비스 UI/UX</div>
+                        <div class="project-item">삼성전자 갤럭시 Gear2 UI/UX</div>
+                        <div class="project-item">29CM 모바일 앱 UI/UX</div>
+                        <div class="project-item">쿠팡 UI/UX</div>
+                        <div class="project-item">삼성전자 선행 UI/UX 디자인</div>
+                    </div>
+
+                    <div class="project-year-group">
+                        <div class="project-year-header">2010~2011 — PLUS X 창립</div>
+                        <div class="project-item">CGV 아이패드/아이폰 앱 UI/UX</div>
+                        <div class="project-item">CGV 웹사이트 UI/UX</div>
+                        <div class="project-item">삼성전자 무선사업부 선행 UI/UX</div>
+                        <div class="project-item">영국문화원 교육용 앱 UI/UX</div>
+                    </div>
+
+                    <div class="project-year-group">
+                        <div class="project-year-header">2006~2010 — NHN</div>
+                        <div class="project-item">NAVER 그린팩토리 미디어 디자인 총괄</div>
+                        <div class="project-item">NAVER 한글한글 아름답게 캠페인 — <span class="highlight">깐느 Silver Lion</span>
+                        </div>
+                        <div class="project-item">NAVER 브랜드사이트 / 메인 개편</div>
+                        <div class="project-item">NAVER 오픈캐스트 서비스 디자인</div>
+                        <div class="project-item">NHN 한게임 CGO 프레젠테이션 디자인</div>
+                    </div>
+
+                    <div class="project-year-group">
+                        <div class="project-year-header">2003~2005 — 디자인뉴이</div>
+                        <div class="project-item">삼성전자 모바일 마이크로 사이트</div>
+                        <div class="project-item">LG패션 MOGG 브랜드 사이트</div>
+                        <div class="project-item">삼성 YEPP 웹사이트</div>
+                        <div class="project-item">다수 중소기업 웹사이트 제작</div>
+                    </div>
+
+                    <br>
+                    <div class="dim">총 100+ 프로젝트 — 상세 포트폴리오는 하단 링크 참조</div>
+                </div>
+                <div class="separator">────────────────────────────────────────────────────────────────</div>
+            </section>
+
+            <!-- ═══════════════════════════════════
+                 LECTURES — history lectures
+                 ═══════════════════════════════════ -->
+            <section class="section" id="lectures">
+                <div class="prompt-line">
+                    <span class="prompt">sabum@portfolio:~$</span> <span class="command">history lectures</span>
+                </div>
+                <div class="output-block">
+                    <div class="comment"># 강의 및 세미나 이력 — 110+ 회</div>
+                    <br>
+
+                    <div class="lecture-category">
+                        <div class="lecture-category-title">▸ 최근 활동</div>
+                        <div class="lecture-list">
+                            2024년 — 기업·대학 70여번의 AI 강연<br>
+                            2023년 — 패스트캠퍼스 온라인 AI 강의 런칭<br>
+                            2013년 — 국민대 디자인학부 UI/UX 수업 출강<br>
+                            2010년~ — 대학, 기업, 단체 40여 차례 세미나
+                        </div>
+                    </div>
+
+                    <div class="lecture-category">
+                        <div class="lecture-category-title">▸ 대학 강연</div>
+                        <div class="lecture-list">
+                            홍익대 · 국민대 · 카이스트 · 단국대 · 서강대 · 경희대 · 계원대<br>
+                            가천대학교 · 청강문화산업대학<br>
+                            <span class="highlight">대만디자인대학 · 미국 아트센터 칼리지 오브 디자인</span> 특강
+                        </div>
+                    </div>
+
+                    <div class="lecture-category">
+                        <div class="lecture-category-title">▸ 해외 기업 초청</div>
+                        <div class="lecture-list">
+                            <span class="highlight">중국 알리바바</span> · 왕이 · 텐센트 초청 세미나<br>
+                            홍콩디자인센터 HKDC · 에스티로더 · 랄프로렌
+                        </div>
+                    </div>
+
+                    <div class="lecture-category">
+                        <div class="lecture-category-title">▸ 국내 기업</div>
+                        <div class="lecture-list">
+                            삼성전자 · LG전자 · KT · 네이버 · 카카오 · 라인<br>
+                            현대홈쇼핑 · 삼성화재 · 한화그룹 · 미래에셋<br>
+                            쿠팡 · 배달의민족 · 29CM · 여기어때<br>
+                            Adobe · 제일기획 · SM · 아모레 · SPC
+                        </div>
+                    </div>
+
+                    <div class="lecture-category">
+                        <div class="lecture-category-title">▸ 단체 / 컨퍼런스</div>
+                        <div class="lecture-list">
+                            KIDP(한국디자인진흥원) · 패스트캠퍼스 · CA컨퍼런스<br>
+                            UX World · 현대카드 컬쳐 · 브랜드비즈 · 롱블랙<br>
+                            해럴드 디자인 · 서울디자인비전포럼 · 콘텐츠코리아
+                        </div>
+                    </div>
+                </div>
+                <div class="separator">────────────────────────────────────────────────────────────────</div>
+            </section>
+
+            <!-- ═══════════════════════════════════
+                 CONTACT — cat contact.txt
+                 ═══════════════════════════════════ -->
+            <section class="section" id="contact">
+                <div class="prompt-line">
+                    <span class="prompt">sabum@portfolio:~$</span> <span class="command">cat contact.txt</span>
+                </div>
+                <div class="output-block">
+                    <br>
+                    <div><span class="label">EMAIL </span> <a href="mailto:sabum@plus-ex.com">sabum@plus-ex.com</a>
+                    </div>
+                    <div><span class="label">WEBSITE </span> <a href="http://www.plus-ex.com" target="_blank"
+                            rel="noopener">www.plus-ex.com</a></div>
+                    <div><span class="label">BLOG </span> <a href="http://blog.naver.com/sabum007" target="_blank"
+                            rel="noopener">blog.naver.com/sabum007</a></div>
+                    <div><span class="label">BEHANCE </span> <a href="https://www.behance.net/sabum" target="_blank"
+                            rel="noopener">behance.net/sabum</a></div>
+                    <br>
+                    <div class="dim">● 포트폴리오의 일부는 비핸스에서 확인이 가능합니다.</div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════
+                 GALLERY — ls -la works/
+                 ═══════════════════════════════════ -->
+            <section class="section" id="gallery">
+                <div class="prompt-line">
+                    <span class="prompt">sabum@portfolio:~$</span> <span class="command">ls -la works/*.pixel</span>
+                </div>
+                <div class="output-block">
+                    <div class="comment"># 포트폴리오 작업 이미지 — 픽셀아트 렌더링</div>
+                    <br>
+                    <div class="gallery-grid" id="pixelGallery">
+                        <div class="gallery-item" data-src="img/img_004.jpg" data-label="HAPPY ENDING">
+                            <canvas></canvas>
+                            <div class="pixel-frame"></div>
+                            <div class="gallery-label">HAPPY ENDING</div>
+                        </div>
+                        <div class="gallery-item" data-src="img/img_009.jpg" data-label="TYPOGRAPHY ABC">
+                            <canvas></canvas>
+                            <div class="pixel-frame"></div>
+                            <div class="gallery-label">TYPOGRAPHY ABC</div>
+                        </div>
+                        <div class="gallery-item" data-src="img/img_011.jpg" data-label="SHARK GOLDFISH">
+                            <canvas></canvas>
+                            <div class="pixel-frame"></div>
+                            <div class="gallery-label">SHARK GOLDFISH</div>
+                        </div>
+                        <div class="gallery-item" data-src="img/img_012.jpg" data-label="TYPE D">
+                            <canvas></canvas>
+                            <div class="pixel-frame"></div>
+                            <div class="gallery-label">TYPE D</div>
+                        </div>
+                    </div>
+                    <div class="dim" style="margin-top:8px;">-rw-r--r-- 4 files pixelated ██████████ 100%</div>
+                </div>
+                <div class="separator">────────────────────────────────────────────────────────────────</div>
+            </section>
+
+        </div><!-- /terminal-body -->
+
+        <!-- ═══════════════════════════════════
+             푸터
+             ═══════════════════════════════════ -->
+        <footer class="terminal-footer">
+            <pre class="footer-ascii">
+┌──────────────────────────────────────────────────┐
+│  변사범 — Creative Director & Brand Designer     │
+│  22+ years of design expertise                   │
+│  "시각적 임팩트로 브랜드의 가치를 만듭니다"      │
+└──────────────────────────────────────────────────┘</pre>
+            <div style="margin-top: 16px;">
+                <span class="prompt">sabum@portfolio:~$</span> <span class="cursor-blink" aria-hidden="true"></span>
+            </div>
+            <div class="dim" style="margin-top: 24px;font-size:0.8rem;">
+                © 2025 Byun Sabum. Built with terminal aesthetics.
+            </div>
+        </footer>
+
+    </div><!-- /terminal-window -->
+
+    <!-- ═══════════════════════════════════════════
+         JavaScript
+         ═══════════════════════════════════════════ -->
+    <script>
+        // ─── 부팅 화면 ───
+        window.addEventListener('load', () => {
+            const boot = document.getElementById('bootScreen');
+            setTimeout(() => {
+                boot.classList.add('hidden');
+                setTimeout(() => boot.remove(), 500);
+            }, 2500);
+        });
+
+        // ─── 스크롤 프로그레스 바 ───
+        const scrollProgress = document.getElementById('scrollProgress');
+        function updateScrollProgress() {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = (scrollTop / scrollHeight) * 100;
+            scrollProgress.style.width = progress + '%';
+        }
+        window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+        // ─── 섹션 스크롤 애니메이션 (IntersectionObserver + 글리치) ───
+        const sections = document.querySelectorAll('.section:not(.visible)');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // 글리치 효과와 함께 등장
+                    entry.target.classList.add('visible', 'glitch-in');
+                    observer.unobserve(entry.target);
+
+                    // 글리치 효과 해제 (애니메이션 후)
+                    setTimeout(() => {
+                        entry.target.classList.remove('glitch-in');
+                    }, 700);
+
+                    // 통계 카운트업 트리거
+                    if (entry.target.id === 'profile') {
+                        animateStats();
+                    }
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        sections.forEach(section => observer.observe(section));
+
+        // ═══════════════════════════════════════════
+        // 통계 카운트업 + 게임 씬
+        // ═══════════════════════════════════════════
+        let statsAnimated = false;
+        let gameRunning = false;
+
+        function animateStats() {
+            if (statsAnimated) return;
+            statsAnimated = true;
+
+            // 픽셀 폰트 카운트업
+            document.querySelectorAll('.stat-value[data-target]').forEach((el, i) => {
+                const target = parseInt(el.dataset.target);
+                let current = 0;
+                const step = Math.ceil(target / 30);
+                setTimeout(() => {
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= target) { current = target; clearInterval(timer); }
+                        el.textContent = current;
+                    }, 40);
+                }, i * 200);
+            });
+
+            // 게임 씬 시작
+            startGameScene();
+        }
+
+        function startGameScene() {
+            const canvas = document.getElementById('gameCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            const W = 480;
+            const H = 100;
+            canvas.width = W;
+            canvas.height = H;
+            gameRunning = true;
+
+            // 블록 데이터 (순수 장식용)
+            const blocks = [
+                { x: Math.floor(W * 0.2), broken: false, particles: [] },
+                { x: Math.floor(W * 0.4), broken: false, particles: [] },
+                { x: Math.floor(W * 0.6), broken: false, particles: [] },
+                { x: Math.floor(W * 0.8), broken: false, particles: [] }
+            ];
+
+            const character = {
+                x: -20, y: H - 34, frame: 0, dir: 1, speed: 1.2,
+                targetIdx: 0, state: 'walk', punchFrame: 0,
+                scale: 1, growing: false, growFrame: 0
+            };
+
+            const coins = [];
+            const sparkles = [];
+            let mushroom = null;
+
+            function pRect(x, y, w, h, color) {
+                ctx.fillStyle = color;
+                ctx.fillRect(Math.floor(x), Math.floor(y), w, h);
+            }
+
+            function drawCharacter() {
+                const s = character.scale;
+                const cx = Math.floor(character.x), d = character.dir;
+                const cy = Math.floor(H - 10 - 20 * s);
+                if (character.growing) {
+                    character.growFrame++;
+                    if (character.growFrame % 4 < 2) return;
+                    if (character.growFrame > 20) character.growing = false;
+                }
+                pRect(cx + 4 * s, cy, 8 * s, 8 * s, '#FFDD00');
+                pRect(cx + (d > 0 ? 9 * s : 5 * s), cy + 3 * s, 2 * s, 2 * s, '#000');
+                pRect(cx + 3 * s, cy + 8 * s, 10 * s, 8 * s, '#00CC00');
+                const wf = Math.floor(character.frame / 6) % 4;
+                if (character.state === 'walk') {
+                    const offsets = [[4, 9], [3, 10], [4, 9], [5, 8]];
+                    pRect(cx + offsets[wf][0] * s, cy + 16 * s, 3 * s, 4 * s, '#3355AA');
+                    pRect(cx + offsets[wf][1] * s, cy + 16 * s, 3 * s, 4 * s, '#3355AA');
+                    pRect(cx + (d > 0 ? 13 * s : -2 * s), cy + (wf % 2 === 0 ? 9 * s : 11 * s), 3 * s, 3 * s, '#FFDD00');
+                } else if (character.state === 'punch') {
+                    pRect(cx + 4 * s, cy + 16 * s, 3 * s, 4 * s, '#3355AA');
+                    pRect(cx + 9 * s, cy + 16 * s, 3 * s, 4 * s, '#3355AA');
+                    const ext = character.punchFrame < 4 ? character.punchFrame * 2 : (8 - character.punchFrame * 2);
+                    pRect(cx + (d > 0 ? (13 + ext) * s : (-2 - ext) * s), cy + 8 * s, 4 * s, 4 * s, '#FFDD00');
+                } else {
+                    pRect(cx + 4 * s, cy + 16 * s, 3 * s, 4 * s, '#3355AA');
+                    pRect(cx + 9 * s, cy + 16 * s, 3 * s, 4 * s, '#3355AA');
+                    pRect(cx + (d > 0 ? 13 * s : -2 * s), cy + 10 * s, 3 * s, 3 * s, '#FFDD00');
+                }
+            }
+
+            function drawBlock(b) {
+                if (b.broken) return;
+                const bx = b.x - 10, by = H - 55;
+                pRect(bx, by, 20, 20, '#CC8800');
+                pRect(bx, by, 20, 2, '#FFCC44');
+                pRect(bx, by, 2, 20, '#FFCC44');
+                pRect(bx + 18, by, 2, 20, '#885500');
+                pRect(bx, by + 18, 20, 2, '#885500');
+                pRect(bx + 7, by + 5, 6, 2, '#FFF');
+                pRect(bx + 11, by + 7, 2, 4, '#FFF');
+                pRect(bx + 9, by + 11, 2, 2, '#FFF');
+                pRect(bx + 9, by + 15, 2, 2, '#FFF');
+            }
+
+            function breakBlock(b, idx) {
+                b.broken = true;
+                const bx = b.x, by = H - 45;
+                const colors = ['#CC8800', '#FFCC44', '#885500', '#FFF'];
+                for (let i = 0; i < 8; i++) {
+                    b.particles.push({
+                        x: bx + (Math.random() - 0.5) * 16, y: by,
+                        vx: (Math.random() - 0.5) * 3, vy: -Math.random() * 4 - 1,
+                        size: 2 + Math.floor(Math.random() * 3),
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        life: 30 + Math.floor(Math.random() * 20)
+                    });
+                }
+                if (idx === blocks.length - 1) {
+                    mushroom = { x: bx, y: by - 10, vy: -3, vx: 0.8, rising: true, grounded: false, eaten: false, frame: 0 };
+                } else {
+                    coins.push({ x: bx, y: by - 10, vy: -2.5, frame: 0, life: 50 });
+                }
+                for (let i = 0; i < 4; i++) {
+                    sparkles.push({
+                        x: bx + (Math.random() - 0.5) * 30, y: by - Math.random() * 20,
+                        frame: 0, life: 15 + Math.floor(Math.random() * 10)
+                    });
+                }
+            }
+
+            function drawMushroom() {
+                if (!mushroom || mushroom.eaten) return;
+                const mx = Math.floor(mushroom.x), my = Math.floor(mushroom.y);
+                pRect(mx - 5, my, 10, 5, '#FF2222');
+                pRect(mx - 3, my - 2, 6, 2, '#FF2222');
+                pRect(mx - 3, my + 1, 2, 2, '#FFF');
+                pRect(mx + 1, my + 1, 2, 2, '#FFF');
+                pRect(mx - 3, my + 5, 6, 5, '#FFFFCC');
+                pRect(mx - 2, my + 6, 2, 2, '#000');
+                pRect(mx + 1, my + 6, 2, 2, '#000');
+            }
+
+            function updateMushroom() {
+                if (!mushroom || mushroom.eaten) return;
+                mushroom.frame++;
+                if (mushroom.rising) {
+                    mushroom.y += mushroom.vy;
+                    mushroom.vy += 0.15;
+                    if (mushroom.y >= H - 20) { mushroom.y = H - 20; mushroom.rising = false; mushroom.grounded = true; }
+                } else if (mushroom.grounded) {
+                    mushroom.x += mushroom.vx;
+                    mushroom.y = H - 20 + Math.sin(mushroom.frame * 0.15) * 2;
+                }
+                const cx = character.x + 8 * character.scale;
+                const cy = H - 10 - 20 * character.scale;
+                if (Math.abs(cx - mushroom.x) < 14 && Math.abs(cy - mushroom.y) < 16) {
+                    mushroom.eaten = true;
+                    character.scale = 2;
+                    character.growing = true;
+                    character.growFrame = 0;
+                    for (let i = 0; i < 8; i++) {
+                        sparkles.push({ x: character.x + (Math.random() - 0.5) * 30, y: cy - Math.random() * 20, frame: 0, life: 20 + Math.floor(Math.random() * 10) });
+                    }
+                }
+            }
+
+            function updateParticles(p) {
+                for (let i = p.length - 1; i >= 0; i--) {
+                    p[i].x += p[i].vx; p[i].y += p[i].vy; p[i].vy += 0.15; p[i].life--;
+                    if (p[i].life <= 0) { p.splice(i, 1); continue; }
+                    pRect(p[i].x, p[i].y, p[i].size, p[i].size, p[i].color);
+                }
+            }
+
+            function drawCoins() {
+                for (let i = coins.length - 1; i >= 0; i--) {
+                    const c = coins[i]; c.y += c.vy; c.vy += 0.08; c.frame++; c.life--;
+                    if (c.life <= 0) { coins.splice(i, 1); continue; }
+                    const w = [6, 4, 2, 4][Math.floor(c.frame / 4) % 4];
+                    pRect(c.x - w / 2, c.y, w, 6, '#FFFF00');
+                    if (w > 2) pRect(c.x - w / 2 + 1, c.y + 1, w - 2, 4, '#FFCC00');
+                }
+            }
+
+            function drawSparkles() {
+                for (let i = sparkles.length - 1; i >= 0; i--) {
+                    const s = sparkles[i]; s.frame++; s.life--; s.y -= 0.3;
+                    if (s.life <= 0) { sparkles.splice(i, 1); continue; }
+                    const ph = Math.floor(s.frame / 3) % 3;
+                    const col = s.life > 8 ? '#FFF' : '#FFFF88';
+                    if (ph === 1) { pRect(s.x - 1, s.y, 4, 2, col); pRect(s.x, s.y - 1, 2, 4, col); }
+                    else { pRect(s.x, s.y, 2, 2, col); }
+                }
+            }
+
+            const clouds = [{ x: 30, y: 12, w: 40 }, { x: 180, y: 6, w: 50 }, { x: 350, y: 16, w: 35 }];
+
+            function gameLoop() {
+                if (!gameRunning) return;
+                ctx.fillStyle = '#000088';
+                ctx.fillRect(0, 0, W, H);
+
+                clouds.forEach(c => {
+                    c.x += 0.1; if (c.x > W + 30) c.x = -60;
+                    pRect(c.x, c.y, c.w, 6, 'rgba(255,255,255,0.12)');
+                    pRect(c.x + 6, c.y - 3, c.w - 12, 5, 'rgba(255,255,255,0.12)');
+                });
+
+                for (let gx = 0; gx < W; gx += 16) {
+                    pRect(gx, H - 8, 16, 8, (gx / 16) % 2 === 0 ? '#2a6e2a' : '#247024');
+                    pRect(gx, H - 10, 16, 2, '#3a8e3a');
+                }
+
+                blocks.forEach(b => { drawBlock(b); });
+
+                character.frame++;
+                if (character.state === 'walk') {
+                    character.x += character.speed * character.dir;
+                    const tb = blocks[character.targetIdx];
+                    if (tb && !tb.broken) {
+                        if (Math.abs(character.x + 8 - tb.x) < 5) {
+                            character.state = 'punch'; character.punchFrame = 0;
+                        }
+                    } else {
+                        let found = false;
+                        for (let i = 0; i < blocks.length; i++) {
+                            if (!blocks[i].broken) {
+                                character.targetIdx = i;
+                                character.dir = blocks[i].x > character.x + 8 ? 1 : -1;
+                                found = true; break;
+                            }
+                        }
+                        if (!found) { character.dir = 1; if (character.x > W + 20) character.state = 'idle'; }
+                    }
+                } else if (character.state === 'punch') {
+                    character.punchFrame++;
+                    if (character.punchFrame >= 6) {
+                        const tb = blocks[character.targetIdx];
+                        if (tb && !tb.broken) breakBlock(tb, character.targetIdx);
+                        character.state = 'walk'; character.targetIdx++;
+                    }
+                }
+
+                if (character.state !== 'idle' || character.x < W + 20) drawCharacter();
+                updateMushroom(); drawMushroom();
+                blocks.forEach(b => updateParticles(b.particles));
+                drawCoins(); drawSparkles();
+                requestAnimationFrame(gameLoop);
+            }
+            gameLoop();
+
+            // 마우스 호버 시 게임 리셋
+            const gameScene = document.getElementById('gameScene');
+            if (gameScene) {
+                gameScene.addEventListener('mouseenter', () => {
+                    blocks.forEach(b => { b.broken = false; b.particles = []; });
+                    character.x = -20; character.frame = 0; character.dir = 1;
+                    character.targetIdx = 0; character.state = 'walk'; character.punchFrame = 0;
+                    character.scale = 1; character.growing = false; character.growFrame = 0;
+                    coins.length = 0; sparkles.length = 0;
+                    mushroom = null;
+                });
+            }
+        }
+
+        // ═══════════════════════════════════════════
+        // 갤러리 이미지 픽셀화
+        // ═══════════════════════════════════════════
+        function initPixelGallery() {
+            const items = document.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                const src = item.dataset.src;
+                const canvas = item.querySelector('canvas');
+                if (!src || !canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = function () {
+                    // 저해상도 픽셀아트 렌더링
+                    const pixelSize = 48; // 48x48 픽셀로 축소
+                    canvas.width = pixelSize;
+                    canvas.height = pixelSize;
+                    ctx.imageSmoothingEnabled = false;
+                    ctx.drawImage(img, 0, 0, pixelSize, pixelSize);
+                };
+                img.src = src;
+
+                // 호버: 해상도 높임
+                item.addEventListener('mouseenter', () => {
+                    const hiRes = 128;
+                    canvas.width = hiRes;
+                    canvas.height = hiRes;
+                    const ctx2 = canvas.getContext('2d');
+                    ctx2.imageSmoothingEnabled = false;
+                    const img2 = new Image();
+                    img2.onload = () => ctx2.drawImage(img2, 0, 0, hiRes, hiRes);
+                    img2.src = src;
+                });
+
+                // 마우스 떠남: 저해상도로 복원
+                item.addEventListener('mouseleave', () => {
+                    const loRes = 48;
+                    canvas.width = loRes;
+                    canvas.height = loRes;
+                    const ctx2 = canvas.getContext('2d');
+                    ctx2.imageSmoothingEnabled = false;
+                    const img2 = new Image();
+                    img2.onload = () => ctx2.drawImage(img2, 0, 0, loRes, loRes);
+                    img2.src = src;
+                });
+            });
+        }
+
+        // 갤러리 초기화 — 페이지 로드 후
+        window.addEventListener('load', () => {
+            setTimeout(initPixelGallery, 3000); // 부팅 화면 이후
+        });
+
+        // ─── 네비게이션 부드러운 스크롤 ───
+        document.querySelectorAll('.nav-cmd').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ─── 모바일 터치 이벤트 지원 ───
+        // 터치 디바이스에서 네비게이션 클릭 지원
+        document.querySelectorAll('.nav-cmd').forEach(link => {
+            link.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, { passive: false });
+        });
+
+        // ─── 타이틀바 경로 업데이트 (현재 섹션 표시) ───
+        const titlePath = document.querySelector('.titlebar-path');
+        const sectionNames = {
+            'intro': '~/',
+            'profile': '~/whoami',
+            'career': '~/career.log',
+            'awards': '~/awards/',
+            'projects': '~/projects/',
+            'lectures': '~/lectures/',
+            'gallery': '~/works/',
+            'contact': '~/contact.txt'
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    if (sectionNames[id]) {
+                        titlePath.textContent = `sabum@portfolio:${sectionNames[id]} — zsh — 120×40`;
+                    }
+                }
+            });
+        }, {
+            threshold: 0.3
+        });
+
+        document.querySelectorAll('.section').forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // ─── 키보드 접근성 (Esc키로 포커스 해제) ───
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.activeElement.blur();
+            }
+        });
+
+        // ═══════════════════════════════════════════
+        // 테마 전환
+        // ═══════════════════════════════════════════
+        const themeBtns = document.querySelectorAll('.theme-btn');
+        const gameCanvasBgColors = {
+            'blue': '#000088',
+            'black': '#0a0a0a',
+            'prism': '#120830'
+        };
+
+        themeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme;
+
+                // active 표시 전환
+                themeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // 테마 적용
+                if (theme === 'blue') {
+                    document.documentElement.removeAttribute('data-theme');
+                } else {
+                    document.documentElement.setAttribute('data-theme', theme);
+                }
+
+                // 게임 캔버스 배경색 업데이트
+                const gameCanvas = document.getElementById('gameCanvas');
+                if (gameCanvas) {
+                    gameCanvas.dataset.bgColor = gameCanvasBgColors[theme] || '#000088';
+                }
+            });
+        });
+
+        // ═══════════════════════════════════════════
+        // 한/영 전환
+        // ═══════════════════════════════════════════
+        let currentLang = 'ko';
+        const langBtns = document.querySelectorAll('.lang-btn');
+
+        // 번역 데이터: [CSS 셀렉터, 한국어, 영어]
+        const translations = [
+            // 부팅 화면
+            ['#bootScreen .boot-line:nth-child(2)', '[OK] 시스템 초기화 중...', '[OK] Initializing system...'],
+            ['#bootScreen .boot-line:nth-child(3)', '[OK] 프로필 데이터 로드...', '[OK] Loading profile data...'],
+            ['#bootScreen .boot-line:nth-child(4)', '[OK] 포트폴리오 렌더링...', '[OK] Rendering portfolio...'],
+            ['#bootScreen .boot-line:nth-child(5)', '✓ 준비 완료', '✓ Ready'],
+            // 경력
+            ['#career .comment', '# 경력 사항 — 22년의 디자인 여정', '# Career — 22 Years of Design Journey'],
+            ['#career .career-item:nth-child(3) .career-year', '2023 ~ 현재 ▌', '2023 ~ Present ▌'],
+            ['#career .career-item:nth-child(3) .career-role', '플러스엑스 고문 / <span class="highlight">스탠더스 CDO</span>', 'Plus X Advisor / <span class="highlight">Standards CDO</span>'],
+            ['#career .career-item:nth-child(4) .career-role', '<span class="highlight">위더코어 공동대표</span>', '<span class="highlight">WithCore Co-CEO</span>'],
+            ['#career .career-item:nth-child(5) .career-role', '<span class="highlight">Plus X 공동대표</span> / Creative Director', '<span class="highlight">Plus X Co-CEO</span> / Creative Director'],
+            ['#career .career-item:nth-child(6) .career-role', '<span class="highlight">NHN</span> 미디어디자인 팀장', '<span class="highlight">NHN</span> Media Design Team Lead'],
+            ['#career .career-item:nth-child(7) .career-role', '디자인피버 디자이너', 'Designfever Designer'],
+            ['#career .career-item:nth-child(8) .career-role', '디자인뉴이 창업', 'Design Neui Founder'],
+            ['#career .career-item:nth-child(9) .career-role', '청강문화산업대학 멀티미디어디자인학과', 'Cheonggang College, Multimedia Design'],
+            // 수상
+            ['#awards .comment', '# 총 38개의 국내외 디자인 어워드 수상', '# 38 Domestic & International Design Awards'],
+            // 프로젝트
+            ['#projects .comment', '# 디자인 실적 — 주요 프로젝트 아카이브', '# Design Portfolio — Major Project Archive'],
+            ['#projects .dim', '총 100+ 프로젝트 — 상세 포트폴리오는 하단 링크 참조', '100+ Projects — See links below for detailed portfolio'],
+            // 강의
+            ['#lectures .comment', '# 강의 및 세미나 이력 — 110+ 회', '# Lectures & Seminars — 110+ Sessions'],
+            // 갤러리
+            ['#gallery .comment', '# 포트폴리오 작업 이미지 — 픽셀아트 렌더링', '# Portfolio Works — Pixel Art Rendering'],
+            // 연락처
+            ['#contact .output-block .dim', '● 포트폴리오의 일부는 비핸스에서 확인이 가능합니다.', '● Some portfolio works are available on Behance.'],
+        ];
+
+        // 통계 라벨
+        const statLabels = {
+            ko: ['경력 (년)', '수상 실적', '+ 프로젝트', '+ 강연 횟수'],
+            en: ['Career (yr)', 'Awards', '+ Projects', '+ Lectures']
+        };
+
+        // 프로젝트 항목 번역 (연도 그룹별)
+        const projectGroups = {
+            ko: [
+                { header: '2024~2025', items: ['로우로우 폴스미스 포스터 제작', 'MBC 다큐멘터리 교실이데아 인트로 아트웍', '블러블러 AI 모델에이전트 브랜드 개발'] },
+                { header: '2023', items: ['패스트캠퍼스 AI 강의 런칭', '동해소주 AI포스터 디자인 (AI)', 'LG생활건강 아우라 라벨 디자인 (AI)', 'LG생활건강 키비주얼 디자인 (AI)'] },
+                { header: '2020~2022', items: ['디폰데 / 키네프 / 포슐라 코스메틱 브랜드 전체 운영', '삼성화재 디자인 컨설팅 및 개선', '픽스낫띵 패션브랜드 런칭'] },
+                { header: '2018~2019', items: ['플러스엑스 웹사이트 리뉴얼', '중국 메이디 HOOD PRODUCT 선행디자인', '이마트 APP UI/UX', '삼성전자 신규 제품개발 UI/UX', '제주항공 UI/UX'] },
+                { header: '2015~2017', items: ['롯데 L.POINT UI/UX디자인', '이베이 G9 UI/UX디자인', 'YG E-SHOP / YG TIMES UI/UX', '신세계백화점 앱 UI/UX디자인', '29CM 앱 UI/UX디자인 고도화'] },
+                { header: '2012~2014', items: ['신세계 SSG PAY 브랜드·서비스 UI/UX', '삼성전자 갤럭시 Gear2 UI/UX', '29CM 모바일 앱 UI/UX', '쿠팡 UI/UX', '삼성전자 선행 UI/UX 디자인'] },
+                { header: '2010~2011 — PLUS X 창립', items: ['CGV 아이패드/아이폰 앱 UI/UX', 'CGV 웹사이트 UI/UX', '삼성전자 무선사업부 선행 UI/UX', '영국문화원 교육용 앱 UI/UX'] },
+                { header: '2006~2010 — NHN', items: ['NAVER 그린팩토리 미디어 디자인 총괄', 'NAVER 한글한글 아름답게 캠페인 — <span class="highlight">깐느 Silver Lion</span>', 'NAVER 브랜드사이트 / 메인 개편', 'NAVER 오픈캐스트 서비스 디자인', 'NHN 한게임 CGO 프레젠테이션 디자인'] },
+                { header: '2003~2005 — 디자인뉴이', items: ['삼성전자 모바일 마이크로 사이트', 'LG패션 MOGG 브랜드 사이트', '삼성 YEPP 웹사이트', '다수 중소기업 웹사이트 제작'] }
+            ],
+            en: [
+                { header: '2024~2025', items: ['RAWROW × Paul Smith Poster Design', 'MBC Documentary "Classroom Idea" Intro Artwork', 'BlurBlur AI Model Agent Brand Development'] },
+                { header: '2023', items: ['FastCampus AI Course Launch', 'Donghae Soju AI Poster Design (AI)', 'LG H&H Aura Label Design (AI)', 'LG H&H Key Visual Design (AI)'] },
+                { header: '2020~2022', items: ['Deeponde / Kinef / Poschula Cosmetic Brand Operations', 'Samsung Fire Insurance Design Consulting', 'FixNothing Fashion Brand Launch'] },
+                { header: '2018~2019', items: ['Plus X Website Renewal', 'China Midea HOOD PRODUCT Advanced Design', 'Emart APP UI/UX', 'Samsung Electronics New Product UI/UX', 'Jeju Air UI/UX'] },
+                { header: '2015~2017', items: ['Lotte L.POINT UI/UX Design', 'eBay G9 UI/UX Design', 'YG E-SHOP / YG TIMES UI/UX', 'Shinsegae Dept. Store App UI/UX', '29CM App UI/UX Enhancement'] },
+                { header: '2012~2014', items: ['Shinsegae SSG PAY Brand & Service UI/UX', 'Samsung Galaxy Gear2 UI/UX', '29CM Mobile App UI/UX', 'Coupang UI/UX', 'Samsung Advanced UI/UX Design'] },
+                { header: '2010~2011 — PLUS X Founded', items: ['CGV iPad/iPhone App UI/UX', 'CGV Website UI/UX', 'Samsung Wireless Division Advanced UI/UX', 'British Council Educational App UI/UX'] },
+                { header: '2006~2010 — NHN', items: ['NAVER Green Factory Media Design Director', 'NAVER Hangul Campaign — <span class="highlight">Cannes Silver Lion</span>', 'NAVER Brand Site / Main Renewal', 'NAVER Opencast Service Design', 'NHN Hangame CGO Presentation Design'] },
+                { header: '2003~2005 — Design Neui', items: ['Samsung Electronics Mobile Micro Site', 'LG Fashion MOGG Brand Site', 'Samsung YEPP Website', 'Various SME Websites'] }
+            ]
+        };
+
+        // 수상 한국어 항목 번역
+        const awardTranslations = [
+            ['& award 대상', '& award Grand Prize'],
+            ['3개 부분 수상', '3 Categories Winner'],
+            ['기업디자인 본상', 'Corporate Design Main Prize'],
+            ['깐느 Silver Lion', 'Cannes Silver Lion'],
+            ['네이버 한글캠페인', 'NAVER Hangul Campaign'],
+        ];
+
+        // 강의 타이틀 + 내용
+        const lectureData = {
+            ko: {
+                titles: ['▸ 최근 활동', '▸ 대학 강연', '▸ 해외 기업 초청', '▸ 국내 기업', '▸ 단체 / 컨퍼런스'],
+                contents: [
+                    '2024년 — 기업·대학 70여번의 AI 강연<br>2023년 — 패스트캠퍼스 온라인 AI 강의 런칭<br>2013년 — 국민대 디자인학부 UI/UX 수업 출강<br>2010년~ — 대학, 기업, 단체 40여 차례 세미나',
+                    '홍익대 · 국민대 · 카이스트 · 단국대 · 서강대 · 경희대 · 계원대<br>가천대학교 · 청강문화산업대학<br><span class="highlight">대만디자인대학 · 미국 아트센터 칼리지 오브 디자인</span> 특강',
+                    '<span class="highlight">중국 알리바바</span> · 왕이 · 텐센트 초청 세미나<br>홍콩디자인센터 HKDC · 에스티로더 · 랄프로렌',
+                    '삼성전자 · LG전자 · KT · 네이버 · 카카오 · 라인<br>현대홈쇼핑 · 삼성화재 · 한화그룹 · 미래에셋<br>쿠팡 · 배달의민족 · 29CM · 여기어때<br>Adobe · 제일기획 · SM · 아모레 · SPC',
+                    'KIDP(한국디자인진흥원) · 패스트캠퍼스 · CA컨퍼런스<br>UX World · 현대카드 컬쳐 · 브랜드비즈 · 롱블랙<br>해럴드 디자인 · 서울디자인비전포럼 · 콘텐츠코리아'
+                ]
+            },
+            en: {
+                titles: ['▸ Recent Activity', '▸ University Lectures', '▸ Invited by Global Companies', '▸ Domestic Companies', '▸ Organizations / Conferences'],
+                contents: [
+                    '2024 — 70+ AI lectures at companies & universities<br>2023 — FastCampus online AI course launch<br>2013 — Kookmin Univ. Design Dept. UI/UX instructor<br>2010~ — 40+ seminars at universities, companies & organizations',
+                    'Hongik · Kookmin · KAIST · Dankook · Sogang · Kyunghee · Kaywon<br>Gachon University · Cheonggang College<br><span class="highlight">Taiwan Design University · ArtCenter College of Design (USA)</span> Special Lecture',
+                    '<span class="highlight">Alibaba (China)</span> · NetEase · Tencent Invited Seminar<br>HKDC Hong Kong Design Centre · Estée Lauder · Ralph Lauren',
+                    'Samsung · LG · KT · NAVER · Kakao · LINE<br>Hyundai Home Shopping · Samsung Fire · Hanwha · Mirae Asset<br>Coupang · Baemin · 29CM · Yanolja<br>Adobe · Cheil · SM · Amorepacific · SPC',
+                    'KIDP (Korea Institute of Design Promotion) · FastCampus · CA Conference<br>UX World · Hyundai Card Culture · BrandBiz · Longblack<br>Herald Design · Seoul Design Vision Forum · Contents Korea'
+                ]
+            }
+        };
+
+        // 푸터 번역
+        const footerAscii = {
+            ko: `┌──────────────────────────────────────────────────┐
+│  변사범 — Creative Director & Brand Designer     │
+│  22+ years of design expertise                   │
+│  "시각적 임팩트로 브랜드의 가치를 만듭니다"      │
+└──────────────────────────────────────────────────┘`,
+            en: `┌──────────────────────────────────────────────────┐
+│  Sabum Byun — Creative Director & Brand Designer │
+│  22+ years of design expertise                   │
+│  "Creating brand value through visual impact"    │
+└──────────────────────────────────────────────────┘`
+        };
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+
+            // 셀렉터 기반 번역
+            translations.forEach(([selector, ko, en]) => {
+                const el = document.querySelector(selector);
+                if (el) el.innerHTML = lang === 'ko' ? ko : en;
+            });
+
+            // 통계 라벨
+            document.querySelectorAll('.stat-label').forEach((el, i) => {
+                if (statLabels[lang][i]) el.textContent = statLabels[lang][i];
+            });
+
+            // 프로젝트 항목
+            const groups = document.querySelectorAll('#projects .project-year-group');
+            const pData = projectGroups[lang];
+            groups.forEach((group, gi) => {
+                if (!pData[gi]) return;
+                const header = group.querySelector('.project-year-header');
+                if (header) header.textContent = pData[gi].header;
+                const items = group.querySelectorAll('.project-item');
+                items.forEach((item, ii) => {
+                    if (pData[gi].items[ii]) item.innerHTML = pData[gi].items[ii];
+                });
+            });
+
+            // 수상 한국어 항목
+            const awardItems = document.querySelectorAll('#awards .award-item');
+            awardItems.forEach(item => {
+                awardTranslations.forEach(([ko, en]) => {
+                    if (lang === 'en' && item.innerHTML.includes(ko)) {
+                        item.innerHTML = item.innerHTML.replace(ko, en);
+                    } else if (lang === 'ko' && item.innerHTML.includes(en)) {
+                        item.innerHTML = item.innerHTML.replace(en, ko);
+                    }
+                });
+            });
+
+            // 강의 타이틀 + 내용
+            document.querySelectorAll('.lecture-category-title').forEach((el, i) => {
+                if (lectureData[lang].titles[i]) el.textContent = lectureData[lang].titles[i];
+            });
+            document.querySelectorAll('.lecture-list').forEach((el, i) => {
+                if (lectureData[lang].contents[i]) el.innerHTML = lectureData[lang].contents[i];
+            });
+
+            // 푸터
+            const footerEl = document.querySelector('.footer-ascii');
+            if (footerEl) footerEl.textContent = footerAscii[lang];
+        }
+
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.dataset.lang;
+                langBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                switchLanguage(lang);
+            });
+        });
+
+        // ═══════════════════════════════════════════
+        // CRT 글리치 루프
+        // ═══════════════════════════════════════════
+        const crtOverlay = document.getElementById('crtGlitch');
+
+        function triggerCRTGlitch() {
+            if (!crtOverlay) return;
+            crtOverlay.classList.add('active');
+            setTimeout(() => {
+                crtOverlay.classList.remove('active');
+            }, 200);
+        }
+
+        function scheduleCRTGlitch() {
+            const delay = 3000 + Math.random() * 5000; // 3~8초 랜덤
+            setTimeout(() => {
+                triggerCRTGlitch();
+                // 가끔 연속 글리치 (20% 확률)
+                if (Math.random() < 0.2) {
+                    setTimeout(triggerCRTGlitch, 300);
+                }
+                scheduleCRTGlitch();
+            }, delay);
+        }
+
+        // 부팅 후 글리치 시작
+        setTimeout(scheduleCRTGlitch, 4000);
+    </script>
+</body>
+
+</html>
