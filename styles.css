@@ -1,0 +1,66 @@
+.ig-download-btn-wrapper {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none; /* Let hover events pass to the button */
+}
+
+/* 
+  Target the container hover to show the wrapper.
+  This assumes the wrapper is appended to the image's parent container. 
+*/
+._aagv:hover .ig-download-btn-wrapper,
+article:hover .ig-download-btn-wrapper,
+div[role="dialog"] button:hover .ig-download-btn-wrapper,
+.x1lliihq.x1n2onr6:hover .ig-download-btn-wrapper,
+div:hover > .ig-download-btn-wrapper {
+  opacity: 1;
+}
+
+.ig-download-btn {
+  background-color: rgba(38, 38, 38, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  pointer-events: auto; /* Enable clicks on the button itself */
+  padding: 0;
+}
+
+.ig-download-btn:hover {
+  background-color: rgba(38, 38, 38, 0.85);
+  transform: scale(1.05);
+}
+
+.ig-download-btn:active {
+  transform: scale(0.95);
+}
+
+.ig-download-btn.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.ig-download-btn.success {
+  background-color: rgba(46, 204, 113, 0.8);
+  font-size: 16px; /* Size for the emoji checkmark */
+}
+
+.ig-download-svg {
+  width: 20px;
+  height: 20px;
+}
