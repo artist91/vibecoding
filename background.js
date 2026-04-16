@@ -1,7 +1,7 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'downloadImage' && request.url) {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const filename = `ig_image_${timestamp}.jpg`;
+        const filename = `ig_highres_${timestamp}.jpg`;
 
         chrome.downloads.download({
             url: request.url,

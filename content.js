@@ -2,12 +2,10 @@ const SVG_DOWNLOAD_ICON = `<svg aria-label="Download" class="ig-download-svg" fi
 
 // Function to find the highest resolution image URL from an img element
 function getHighResImageUrl(imgElement) {
-    // Check srcset first
     if (imgElement.srcset) {
         const sources = imgElement.srcset.split(',');
         let highestRes = 0;
         let bestUrl = '';
-
         sources.forEach(source => {
             const parts = source.trim().split(' ');
             if (parts.length === 2) {
@@ -19,11 +17,11 @@ function getHighResImageUrl(imgElement) {
                 }
             }
         });
-
         if (bestUrl) return bestUrl;
     }
-
-    // Fallback to regular src
+    
+    // Sometimes high-res image is in a sibling or previous element if this is a blurred placeholder.
+    // However, if we filter properly, we shouldn't hit the placeholder.
     return imgElement.src;
 }
 
@@ -34,8 +32,9 @@ function handleDownload(e, imgElement, btn) {
 
     const url = getHighResImageUrl(imgElement);
 
-    if (!url) {
+    if (!url || url.startsWith('data:')) {
         console.error('Could not find image URL to download.');
+        alert('Failed to find high resolution image.');
         return;
     }
 
@@ -62,19 +61,10 @@ function handleDownload(e, imgElement, btn) {
 }
 
 // Function to inject download button into a target container
-function injectButton(container) {
-    // Check if button already exists in this container
+function injectButton(container, imgElement) {
     if (container.querySelector('.ig-download-btn-wrapper')) {
         return;
     }
-
-    // Look for the image inside this container
-    // Note: Instagram's DOM changes, so we look for standard img tags
-    // We exclude avatars by ensuring the container is of a certain size or structure,
-    // but targeting the article or modal image container usually filters naturally.
-    const imgElement = container.querySelector('img[style*="object-fit: cover"]');
-
-    if (!imgElement || !imgElement.src) return;
 
     // Create button wrapper and button
     const wrapper = document.createElement('div');
@@ -83,15 +73,12 @@ function injectButton(container) {
     const btn = document.createElement('button');
     btn.className = 'ig-download-btn';
     btn.innerHTML = SVG_DOWNLOAD_ICON;
-    btn.title = 'Download Image';
+    btn.title = 'Download High-Res Image';
 
     // Attach click listener
     btn.addEventListener('click', (e) => handleDownload(e, imgElement, btn));
 
     wrapper.appendChild(btn);
-
-    // To place it at the top right of the image, we append it to the container
-    // The container should have position: relative for this to work correctly via CSS
     container.appendChild(wrapper);
 
     // Force container to be relative if it isn't, so absolute positioning works
@@ -103,23 +90,37 @@ function injectButton(container) {
 
 // Main function to scan the DOM for image containers
 function scanForImages() {
-    // Instagram typically wraps feed images and modal images in a specific way.
-    // We can look for divs that contain the actual images.
-    // Targeting divs that have class like '_aagv' (often used for photo wrappers)
-    // Since classes change, a more robust way is to find img tags and go up to their container.
+    // Only look within <article> tags (Feed and Modal posts), ignore the profile grid.
+    const articles = document.querySelectorAll('article');
+    
+    articles.forEach(article => {
+        // Find all images within each article
+        const images = article.querySelectorAll('img');
 
-    const images = document.querySelectorAll('img[style*="object-fit: cover"]');
+        images.forEach(img => {
+            // 1. Filter out UI elements and avatars by checking minimum dimensions
+            if (img.clientWidth > 0 && img.clientWidth < 150) return;
+            if (img.clientHeight > 0 && img.clientHeight < 150) return;
+            
+            // 2. Filter out base64 blurry placeholders
+            if (img.src && img.src.startsWith('data:')) return;
+            
+            // 3. Instagram overlay placeholders often don't have srcset, or have very small intrinsic size
+            if (img.naturalWidth > 0 && img.naturalWidth < 150) return;
 
-    images.forEach(img => {
-        // Look 2 levels up for the stable container (usually the wrapper that constrains the image)
-        const container = img.parentElement.parentElement;
-        if (container && !container.querySelector('.ig-download-btn-wrapper')) {
-            injectButton(container);
-        }
+            // Target the direct parent of the image. 
+            // In a carousel, each image represents a slide and is usually wrapped in an li or div that moves horizontally.
+            // Appending to the parent ensures the button moves alongside the image in the carousel.
+            const container = img.parentElement;
+            
+            if (container && !container.querySelector('.ig-download-btn-wrapper')) {
+                injectButton(container, img);
+            }
+        });
     });
 }
 
-// Set up MutationObserver to detect when new posts load (infinite scroll or modals)
+// Set up MutationObserver to detect when new posts load (infinite scroll or modals or carousel sliding)
 const observer = new MutationObserver((mutations) => {
     let shouldScan = false;
     for (const mutation of mutations) {

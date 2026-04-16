@@ -13,13 +13,10 @@
 
 /* 
   Target the container hover to show the wrapper.
-  This assumes the wrapper is appended to the image's parent container. 
+  This works with our logic where we attach the wrapper to img's parent.
 */
-._aagv:hover .ig-download-btn-wrapper,
-article:hover .ig-download-btn-wrapper,
-div[role="dialog"] button:hover .ig-download-btn-wrapper,
-.x1lliihq.x1n2onr6:hover .ig-download-btn-wrapper,
-div:hover > .ig-download-btn-wrapper {
+div:hover > .ig-download-btn-wrapper,
+li:hover > .ig-download-btn-wrapper {
   opacity: 1;
 }
 
